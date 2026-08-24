@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
+from sklearn.model_selection import train_test_split
 
 
 df = pd.read_csv('datasets/car data.csv')
@@ -23,8 +24,11 @@ df_cleaned = df[(df['Kms_Driven'] >= lower_bound) & (df['Kms_Driven'] <= upper_b
 x_data = df_cleaned['Car Age']
 y_data = df_cleaned['Selling_Price']
 
-# linear regression
-slope, intercept, r, p, std_err = stats.linregress(x_data, y_data)
+# split data up 80% to train 20% to test
+X_train, X_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.2, random_state=42)
+
+# linear regression - only fit train on training set
+slope, intercept, r, p, std_err = stats.linregress(X_test, y_test)
 
 def myfunc(x):
     return slope * x + intercept
