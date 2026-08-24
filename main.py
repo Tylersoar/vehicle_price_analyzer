@@ -28,7 +28,7 @@ y_data = df_cleaned['Selling_Price']
 X_train, X_test, y_train, y_test = train_test_split(x_data, y_data, test_size=0.2, random_state=42)
 
 # linear regression - only fit train on training set
-slope, intercept, r, p, std_err = stats.linregress(X_test, y_test)
+slope, intercept, r, p, std_err = stats.linregress(X_train, y_train)
 
 def myfunc(x):
     return slope * x + intercept
