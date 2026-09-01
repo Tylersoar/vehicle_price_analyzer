@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
@@ -20,10 +21,12 @@ for c in ['year','price','mileage','engineSize']:
 df = df.dropna()
 df['model'] = df['model'].str.strip()
 
+current_year = datetime.now().year
+
 df = df[df['engineSize']>0] # 0.0L = missing
 df = df[df['transmission'] != 'Other']
-df = df[df['year'] <= 2026] # remove car from 2060
-df = df.reset_index(drop=True)
+df = df[df['year'] <= current_year] # remove car from 2060
+df = df.drop_duplicates().reset_index(drop=True)
 
 reference_year = df['year'].max()
 df['Car Age'] = df['year'] - reference_year
@@ -47,7 +50,8 @@ print("MAE:", mean_absolute_error(y_true, y_pred))
 print("RMSE:", root_mean_squared_error(y_true, y_pred))
 
 plt.scatter(y_true, y_pred, alpha=0.6)
-plt.plot([y_true.min(), y_true.max()], [y_pred.min(), y_pred.max()], 'k--')
+lims = [y_true.min(), y_true.max()]
+plt.plot(lims, lims, 'k--')
 plt.xlabel('Actual price (£)')
 plt.ylabel('Predicted price (£)')
 plt.title("Random Forest Regressor: Actual vs Predicted Prices")
