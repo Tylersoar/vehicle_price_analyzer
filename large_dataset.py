@@ -42,7 +42,9 @@ y_log = np.log(y)
 X_train, X_test,y_train_log,y_test_log = train_test_split(X, y_log, test_size=0.2, random_state=42)
 rf = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1).fit(X_train, y_train_log)
 
-y_pred = np.exp(rf.predict(X_test))
+resid = y_train_log - rf.predict(X_train)
+smear = np.mean(np.exp(resid))
+y_pred = np.exp(rf.predict(X_test)) * smear
 y_true = np.exp(y_test_log)
 
 print("test R^2 (£):", r2_score(y_true, y_pred))
